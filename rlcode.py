@@ -1,4 +1,5 @@
 import numpy as np
+import pandas
 
 class TestCasePrioritizationEnvironment:
     def __init__(self, test_cases, costs, value_priorities, historical_success_rates):
