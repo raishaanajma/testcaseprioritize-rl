@@ -1,5 +1,5 @@
 import numpy as np
-import pandas
+import pandas as pd
 
 class TestCasePrioritizationEnvironment:
     def __init__(self, test_cases, costs, value_priorities, historical_success_rates):
@@ -34,10 +34,11 @@ class TestCasePrioritizationEnvironment:
         return self.state
 
 #usage
-test_cases = ['Test Case 1', 'Test Case 2', 'Test Case 3']
-costs = {'Test Case 1': 5, 'Test Case 2': 10, 'Test Case 3': 8}
-value_priorities = {'Test Case 1': 0.8, 'Test Case 2': 0.6, 'Test Case 3': 0.7}
-historical_success_rates = {'Test Case 1': 0.9, 'Test Case 2': 0.7, 'Test Case 3': 0.8}
+df = pd.read_excel('data_input.xlsx')
+test_cases = df['Test Cases'].tolist()
+costs = df.set_index('Test Cases')['Costs'].to_dict()
+value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
+historical_success_rates = df.set_index('Test Cases')['Historical Success Rates'].to_dict()
 
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
 
