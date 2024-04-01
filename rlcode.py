@@ -36,9 +36,9 @@ class TestCasePrioritizationEnvironment:
 #usage
 df = pd.read_excel('data_input.xlsx')
 test_cases = df['Test Cases'].tolist()
-costs = df.set_index('Test Cases')['Costs'].to_dict()
+costs = df.set_index('Test Cases')['Cost'].to_dict()
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
-historical_success_rates = df.set_index('Test Cases')['Historical Success Rates'].to_dict()
+historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
 
@@ -51,6 +51,7 @@ for episode in range(num_episodes):
         #choose action based on RL policy
         action = np.random.randint(2, size=len(test_cases))  #random action for illustration
         next_state, reward, total_cost = env.step(action)
+        print("Episode:", episode + 1, "| Action:", action, "| Reward:", reward, "| Total Cost:", total_cost)
         #update RL model parameters based on experience
 
 #print sequence selected test cases
