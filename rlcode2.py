@@ -47,7 +47,7 @@ historical_success_rates = df.set_index('Test Cases')['Historical Success Rate']
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
 
 # RL training loop
-num_episodes = 1000
+num_episodes = 100
 max_steps_per_episode = 100  # Define maximum number of steps per episode
 for episode in range(num_episodes):
     state = env.reset()
