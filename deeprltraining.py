@@ -59,7 +59,7 @@ costs = df.set_index('Test Cases')['Cost'].to_dict()
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
 historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
-env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
+env = TestCasePrioritizationEnvironment(range(len(test_cases)), costs, value_priorities, historical_success_rates)
 
 # Deep RL training loop
 input_size = len(test_cases)
@@ -99,5 +99,6 @@ for episode in range(num_episodes):
 
 # Print sequence of selected test cases
 print("Final Result - Sequence of Selected Test Cases:")
-for i, selected_test_cases in enumerate(env.selected_test_cases_sequence, start=1):
-    print("Episode", i, ":", selected_test_cases)
+for i, selected_test_case_index in enumerate(env.selected_test_cases_sequence, start=1):
+    selected_test_case = test_cases[selected_test_case_index]
+    print("Episode", i, ":", selected_test_case)
