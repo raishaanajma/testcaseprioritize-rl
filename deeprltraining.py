@@ -75,7 +75,7 @@ policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
 gamma = 0.99  # Discount factor
 num_episodes = 100
-max_steps_per_episode = 100
+max_steps_per_episode = len(test_cases)
 
 for episode in range(num_episodes):
     state = env.reset()
