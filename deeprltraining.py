@@ -65,11 +65,6 @@ env = TestCasePrioritizationEnvironment(range(len(test_cases)), costs, value_pri
 input_size = len(test_cases)
 hidden_size = 128
 output_size = len(test_cases)
-
-# Print test cases and costs
-print("Test Cases:", test_cases)
-print("Costs Dictionary:", costs)
-
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
 gamma = 0.99  # Discount factor
