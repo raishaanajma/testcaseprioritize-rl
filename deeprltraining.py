@@ -27,11 +27,11 @@ class TestCasePrioritizationEnvironment:
         self.selected_test_cases_sequence = []  # Store selected test cases for each episode
 
     def step(self, action):
-        # Convert action tensor to numpy array
-        action_np = action.squeeze()
+        # Convert action tensor to scalar
+        action_scalar = action.item()
 
         # Execute selected test cases
-        selected_test_cases = [self.test_cases[i] for i in range(len(self.test_cases)) if action_np[i] == 1]
+        selected_test_cases = [self.test_cases[i] for i in range(len(self.test_cases)) if action_scalar[i] == 1]
         executed_test_cases_cost = sum(self.costs[test_case] for test_case in selected_test_cases)
         self.total_cost += executed_test_cases_cost
         
@@ -85,7 +85,7 @@ for episode in range(num_episodes):
         action = action_dist.sample().item()  # Convert tensor to scalar
         action_tensor = torch.tensor([action])  # Convert scalar to tensor
         episode_log_probs.append(action_dist.log_prob(action_tensor))  # Pass action tensor
-        next_state, reward, total_cost = env.step(action_tensor.squeeze().numpy())
+        next_state, reward, total_cost = env.step(action_tensor)
         episode_rewards.append(reward)
         state = next_state
     returns = []
