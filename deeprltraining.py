@@ -78,7 +78,7 @@ for episode in range(num_episodes):
     state = env.reset()
     episode_log_probs = []
     episode_rewards = []
-    for step in range(max_steps_per_episode):
+    for step in range(max_steps_per_episode): 
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
         action_probs = policy_net(state_tensor)
         action_dist = torch.distributions.Categorical(action_probs)
