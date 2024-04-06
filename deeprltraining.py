@@ -28,7 +28,7 @@ class TestCasePrioritizationEnvironment:
 
     def step(self, action):
         # Convert action tensor to numpy array
-        action_np = action.squeeze().numpy()
+        action_np = action.squeeze().np()
 
         # Execute selected test cases
         selected_test_cases = [self.test_cases[i] for i in range(len(self.test_cases)) if action_np[i] == 1]
