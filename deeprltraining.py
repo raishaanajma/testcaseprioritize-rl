@@ -31,7 +31,8 @@ class TestCasePrioritizationEnvironment:
         action_scalar = action.item()
 
         # Execute selected test cases
-        selected_test_case = self.test_cases[action_scalar]
+        selected_test_case_index = action_scalar
+        selected_test_case = self.test_cases[selected_test_case_index]
         executed_test_case_cost = self.costs[selected_test_case]
         self.total_cost += executed_test_case_cost
         
@@ -40,7 +41,7 @@ class TestCasePrioritizationEnvironment:
         
         # Update state
         self.state = np.zeros(len(self.test_cases))  # Reset state
-        self.state[action_scalar] = 1
+        self.state[selected_test_case_index] = 1
         
         # Store selected test cases for this episode
         self.selected_test_cases_sequence.append(selected_test_case)
