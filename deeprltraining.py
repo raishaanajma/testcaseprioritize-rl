@@ -32,18 +32,15 @@ class TestCasePrioritizationEnvironment:
 
         # Execute selected test cases
         selected_test_case = self.test_cases[action_scalar]
-        executed_test_cases_cost = sum(self.costs[test_case] for test_case in selected_test_cases)
-        self.total_cost += executed_test_cases_cost
+        executed_test_case_cost = self.costs[selected_test_case]
+        self.total_cost += executed_test_case_cost
         
         # Calculate reward based on value priority and historical success rate
-        reward = sum(self.value_priorities[test_case] * self.historical_success_rates[test_case]
-                     for test_case in selected_test_cases)
+        reward = self.value_priorities[selected_test_case] * self.historical_success_rates[selected_test_case]
         
         # Update state
         self.state = np.zeros(len(self.test_cases))  # Reset state
-        for i in range(len(self.test_cases)):
-            if self.test_cases[i] in selected_test_cases:
-                self.state[i] = 1
+        self.state[action_scalar] = 1
         
         # Store selected test cases for this episode
         self.selected_test_cases_sequence.append(selected_test_cases)
