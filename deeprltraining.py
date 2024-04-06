@@ -31,7 +31,7 @@ class TestCasePrioritizationEnvironment:
         action_scalar = action.item()
 
         # Execute selected test cases
-        selected_test_cases = [self.test_cases[i] for i in range(len(self.test_cases)) if action_scalar == 1]
+        selected_test_case = self.test_cases[action_scalar]
         executed_test_cases_cost = sum(self.costs[test_case] for test_case in selected_test_cases)
         self.total_cost += executed_test_cases_cost
         
