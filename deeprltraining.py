@@ -5,6 +5,9 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
+#default cost value for missing test cases
+DEFAULT_COST_VALUE = 0
+
 class PolicyNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(PolicyNetwork, self).__init__()
@@ -24,7 +27,7 @@ class TestCasePrioritizationEnvironment:
         self.historical_success_rates = historical_success_rates
         self.state = np.zeros(len(test_cases))  # Initial state
         self.total_cost = 0
-        self.selected_test_cases_sequence = []  # Store selected test cases indices for each episode
+        self.selected_test_cases_sequence = []  # Store selected test cases for each episode
 
     def step(self, action):
         # Convert action tensor to scalar
@@ -32,7 +35,9 @@ class TestCasePrioritizationEnvironment:
 
         # Execute selected test cases
         selected_test_case = self.test_cases[action_scalar]
-        executed_test_case_cost = self.costs[selected_test_case]
+        
+        # Get the cost for the selected test case, or use default cost if not found
+        executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE)
         self.total_cost += executed_test_case_cost
         
         # Calculate reward based on value priority and historical success rate
@@ -42,8 +47,8 @@ class TestCasePrioritizationEnvironment:
         self.state = np.zeros(len(self.test_cases))  # Reset state
         self.state[action_scalar] = 1
         
-        # Store selected test case index for this episode
-        self.selected_test_cases_sequence.append(action_scalar)
+        # Store selected test cases for this episode
+        self.selected_test_cases_sequence.append(selected_test_case)
         
         return self.state, reward, self.total_cost
 
@@ -56,17 +61,10 @@ class TestCasePrioritizationEnvironment:
 df = pd.read_excel('data_input.xlsx')
 test_cases = df['Test Cases'].tolist()
 costs = df.set_index('Test Cases')['Cost'].to_dict()
-
-# Ensure that all test cases are present in the costs dictionary
-for test_case in test_cases:
-    if test_case not in costs:
-        # If a test case is missing, assign a default cost value
-        costs[test_case] = 1
-        
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
 historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
-env = TestCasePrioritizationEnvironment(range(len(test_cases)), costs, value_priorities, historical_success_rates)
+env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
 
 # Deep RL training loop
 input_size = len(test_cases)
@@ -75,7 +73,7 @@ output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
 gamma = 0.99  # Discount factor
-num_episodes = 100
+num_episodes = 10
 max_steps_per_episode = 10
 
 for episode in range(num_episodes):
@@ -106,6 +104,5 @@ for episode in range(num_episodes):
 
 # Print sequence of selected test cases
 print("Final Result - Sequence of Selected Test Cases:")
-for i, selected_test_case_index in enumerate(env.selected_test_cases_sequence, start=1):
-    selected_test_case = test_cases[selected_test_case_index]
+for i, selected_test_case in enumerate(env.selected_test_cases_sequence, start=1):
     print("Episode", i, ":", selected_test_case)
