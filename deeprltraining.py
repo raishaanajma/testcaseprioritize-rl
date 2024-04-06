@@ -56,6 +56,13 @@ class TestCasePrioritizationEnvironment:
 df = pd.read_excel('data_input.xlsx')
 test_cases = df['Test Cases'].tolist()
 costs = df.set_index('Test Cases')['Cost'].to_dict()
+
+# Ensure that all test cases are present in the costs dictionary
+for test_case in test_cases:
+    if test_case not in costs:
+        # If a test case is missing, assign a default cost value
+        costs[test_case] = 1  # Replace DEFAULT_COST_VALUE with your desired default cost
+
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
 historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
