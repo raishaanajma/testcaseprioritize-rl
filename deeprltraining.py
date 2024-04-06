@@ -43,7 +43,7 @@ class TestCasePrioritizationEnvironment:
         self.state[action_scalar] = 1
         
         # Store selected test cases for this episode
-        self.selected_test_cases_sequence.append(selected_test_cases)
+        self.selected_test_cases_sequence.append(selected_test_case)
         
         return self.state, reward, self.total_cost
 
@@ -68,8 +68,8 @@ output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
 gamma = 0.99  # Discount factor
-num_episodes = 100
-max_steps_per_episode = 100
+num_episodes = 10
+max_steps_per_episode = 10
 
 for episode in range(num_episodes):
     state = env.reset()
