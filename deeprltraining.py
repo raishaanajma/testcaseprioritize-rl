@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
-#default cost value for missing test cases
+# Define a default cost value for missing test cases
 DEFAULT_COST_VALUE = 0
 
 class PolicyNetwork(nn.Module):
@@ -27,7 +27,7 @@ class TestCasePrioritizationEnvironment:
         self.historical_success_rates = historical_success_rates
         self.state = np.zeros(len(test_cases))  # Initial state
         self.total_cost = 0
-        self.selected_test_cases_sequence = []  # Store selected test cases for each episode
+        self.selected_test_cases_sequences = []  # Store selected test cases for each episode
 
     def step(self, action):
         # Convert action tensor to scalar
@@ -47,14 +47,15 @@ class TestCasePrioritizationEnvironment:
         self.state = np.zeros(len(self.test_cases))  # Reset state
         self.state[action_scalar] = 1
         
-        # Store selected test cases for this episode
-        self.selected_test_cases_sequence.append(selected_test_case)
+        # Store selected test case for this step
+        self.selected_test_cases_sequences[-1].append(selected_test_case)
         
         return self.state, reward, self.total_cost
 
     def reset(self):
         self.state = np.zeros(len(self.test_cases))  # Reset state
         self.total_cost = 0
+        self.selected_test_cases_sequences.append([])  # Start a new episode
         return self.state
 
 # Usage
@@ -102,7 +103,7 @@ for episode in range(num_episodes):
     policy_loss.backward()
     optimizer.step()
 
-# Print sequence of selected test cases
+# Print sequence of selected test cases for each episode
 print("Final Result - Sequence of Selected Test Cases:")
-for i, selected_test_case in enumerate(env.selected_test_cases_sequence, start=1):
-    print("Episode", i, ":", selected_test_case)
+for i, selected_test_cases in enumerate(env.selected_test_cases_sequences, start=1):
+    print("Episode", i, ":", selected_test_cases)
