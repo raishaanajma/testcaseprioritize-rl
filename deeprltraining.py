@@ -43,7 +43,7 @@ class TestCasePrioritizationEnvironment:
         self.state[action_scalar] = 1
         
         # Store selected test cases for this episode
-        self.selected_test_cases_sequence.append(selected_test_case)
+        self.selected_test_cases_sequence.append(action_scalar)
         
         return self.state, reward, self.total_cost
 
@@ -59,7 +59,7 @@ costs = df.set_index('Test Cases')['Cost'].to_dict()
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
 historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
-env = TestCasePrioritizationEnvironment(range(len(test_cases)), costs, value_priorities, historical_success_rates)
+env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
 
 # Deep RL training loop
 input_size = len(test_cases)
