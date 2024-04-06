@@ -24,7 +24,7 @@ class TestCasePrioritizationEnvironment:
         self.historical_success_rates = historical_success_rates
         self.state = np.zeros(len(test_cases))  # Initial state
         self.total_cost = 0
-        self.selected_test_cases_sequence = []  # Store selected test cases for each episode
+        self.selected_test_cases_sequence = []  # Store selected test cases indices for each episode
 
     def step(self, action):
         # Convert action tensor to scalar
@@ -42,7 +42,7 @@ class TestCasePrioritizationEnvironment:
         self.state = np.zeros(len(self.test_cases))  # Reset state
         self.state[action_scalar] = 1
         
-        # Store selected test cases for this episode
+        # Store selected test case index for this episode
         self.selected_test_cases_sequence.append(action_scalar)
         
         return self.state, reward, self.total_cost
@@ -59,7 +59,7 @@ costs = df.set_index('Test Cases')['Cost'].to_dict()
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
 historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
-env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
+env = TestCasePrioritizationEnvironment(range(len(test_cases)), costs, value_priorities, historical_success_rates)
 
 # Deep RL training loop
 input_size = len(test_cases)
@@ -68,7 +68,7 @@ output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
 gamma = 0.99  # Discount factor
-num_episodes = 10
+num_episodes = 100
 max_steps_per_episode = 10
 
 for episode in range(num_episodes):
