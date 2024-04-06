@@ -79,9 +79,11 @@ for episode in range(num_episodes):
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
         action_probs = policy_net(state_tensor)
         action_dist = torch.distributions.Categorical(action_probs)
-        action = action_dist.sample()
+        action = action_dist.sample().item()  # Convert tensor to scalar
+        action_array = np.zeros(input_size)   # Create action array with correct size
+        action_array[action] = 1               # Set selected test case to 1
         episode_log_probs.append(action_dist.log_prob(action))
-        next_state, reward, total_cost = env.step(action.numpy())
+        next_state, reward, total_cost = env.step(action_array)
         episode_rewards.append(reward)
         state = next_state
     returns = []
