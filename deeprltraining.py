@@ -82,7 +82,7 @@ for episode in range(num_episodes):
         action = action_dist.sample().item()  # Convert tensor to scalar
         action_tensor = torch.tensor([action])  # Convert scalar to tensor
         episode_log_probs.append(action_dist.log_prob(action_tensor))  # Pass action tensor
-        next_state, reward, total_cost = env.step(action_tensor.numpy())
+        next_state, reward, total_cost = env.step(action_tensor)
         episode_rewards.append(reward)
         state = next_state
     returns = []
