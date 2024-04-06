@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
-# Define a default cost value for missing test cases
+#default cost value for missing test cases
 DEFAULT_COST_VALUE = 0
 
 class PolicyNetwork(nn.Module):
@@ -25,40 +25,40 @@ class TestCasePrioritizationEnvironment:
         self.costs = costs
         self.value_priorities = value_priorities
         self.historical_success_rates = historical_success_rates
-        self.state = np.zeros(len(test_cases))  # Initial state
+        self.state = np.zeros(len(test_cases))  #initial state
         self.total_cost = 0
-        self.selected_test_cases_sequences = []  # Store selected test cases for each episode
+        self.selected_test_cases_sequences = []  #store selected test cases for each episode
 
     def step(self, action):
-        # Convert action tensor to scalar
+        #convert action tensor to scalar
         action_scalar = action.item()
 
-        # Execute selected test cases
+        #execute selected test cases
         selected_test_case = self.test_cases[action_scalar]
         
-        # Get the cost for the selected test case, or use default cost if not found
+        #get the cost for the selected test case, or use default cost if not found
         executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE)
         self.total_cost += executed_test_case_cost
         
-        # Calculate reward based on value priority and historical success rate
+        #calculate reward based on value priority and historical success rate
         reward = self.value_priorities[selected_test_case] * self.historical_success_rates[selected_test_case]
         
-        # Update state
+        #update state
         self.state = np.zeros(len(self.test_cases))  # Reset state
         self.state[action_scalar] = 1
         
-        # Store selected test case for this step
+        #store selected test case for this step
         self.selected_test_cases_sequences[-1].append(selected_test_case)
         
         return self.state, reward, self.total_cost
 
     def reset(self):
-        self.state = np.zeros(len(self.test_cases))  # Reset state
+        self.state = np.zeros(len(self.test_cases))  #reset state
         self.total_cost = 0
-        self.selected_test_cases_sequences.append([])  # Start a new episode
+        self.selected_test_cases_sequences.append([])  #start new episode
         return self.state
 
-# Usage
+#implement
 df = pd.read_excel('data_input.xlsx')
 test_cases = df['Test Cases'].tolist()
 costs = df.set_index('Test Cases')['Cost'].to_dict()
@@ -67,13 +67,13 @@ historical_success_rates = df.set_index('Test Cases')['Historical Success Rate']
 
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, historical_success_rates)
 
-# Deep RL training loop
+#deep RL training loop
 input_size = len(test_cases)
 hidden_size = 128
 output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
-gamma = 0.99  # Discount factor
+gamma = 0.99  #discount factor
 num_episodes = 100
 max_steps_per_episode = len(test_cases)
 
@@ -85,9 +85,9 @@ for episode in range(num_episodes):
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
         action_probs = policy_net(state_tensor)
         action_dist = torch.distributions.Categorical(action_probs)
-        action = action_dist.sample().item()  # Convert tensor to scalar
-        action_tensor = torch.tensor([action])  # Convert scalar to tensor
-        episode_log_probs.append(action_dist.log_prob(action_tensor))  # Pass action tensor
+        action = action_dist.sample().item()  #convert tensor to scalar
+        action_tensor = torch.tensor([action])  #convert scalar to tensor
+        episode_log_probs.append(action_dist.log_prob(action_tensor))  #pass action tensor
         next_state, reward, total_cost = env.step(action_tensor)
         episode_rewards.append(reward)
         state = next_state
@@ -103,7 +103,7 @@ for episode in range(num_episodes):
     policy_loss.backward()
     optimizer.step()
 
-# Print sequence of selected test cases for each episode
+#print sequence of test cases for each episode
 print("Final Result - Sequence of Selected Test Cases:")
 for i, selected_test_cases in enumerate(env.selected_test_cases_sequences, start=1):
     print("Episode", i, ":", selected_test_cases)
