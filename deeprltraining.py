@@ -31,14 +31,12 @@ class TestCasePrioritizationEnvironment:
         action_scalar = action.item()
 
         # Execute selected test cases
-        if action_scalar >= len(self.test_cases):
-            raise ValueError("Invalid action: index out of range")
         selected_test_case = self.test_cases[action_scalar]
-        executed_test_case_cost = self.costs.get(selected_test_case, 0)  # Get cost with default value 0 if not found
+        executed_test_case_cost = self.costs[selected_test_case]
         self.total_cost += executed_test_case_cost
         
         # Calculate reward based on value priority and historical success rate
-        reward = self.value_priorities.get(selected_test_case, 0) * self.historical_success_rates.get(selected_test_case, 0)
+        reward = self.value_priorities[selected_test_case] * self.historical_success_rates[selected_test_case]
         
         # Update state
         self.state = np.zeros(len(self.test_cases))  # Reset state
