@@ -61,8 +61,8 @@ costs = df.set_index('Test Cases')['Cost'].to_dict()
 for test_case in test_cases:
     if test_case not in costs:
         # If a test case is missing, assign a default cost value
-        costs[test_case] = 1  # Replace DEFAULT_COST_VALUE with your desired default cost
-
+        costs[test_case] = 1
+        
 value_priorities = df.set_index('Test Cases')['Value Priorities'].to_dict()
 historical_success_rates = df.set_index('Test Cases')['Historical Success Rate'].to_dict()
 
