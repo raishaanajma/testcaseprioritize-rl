@@ -1,0 +1,27 @@
+The dataset is in .csv format, there are 1314 rows and 8 columns in this data set, It has been collected from the MIS of a local industry's documents. 
+The detail of six attributes are as under:
+B_Req --> Business Requirement
+R_Prioirty -->  Requirement Priority of particular business requirement(It can be any prioritization method but in or converted to numerical form it has been extrRacted from requirement tracibility matrix)
+Weight--> I have assigned a weitage against "R_Priority(Requirement Priorirty)" its ceiteria is as under:
+In Project they have used MSCoW Requiremet Prioirty Technique to assign priority:
+>I have assigned 1 to the "Must have" requirement
+>I assigned 2 to the "Should have" requirement
+> I assigned 3 to both "Could have" and "Would Have" requirement[1]
+FP --> Function point of each testing task, which in our case are test cases against each requirement under covers a particular FP
+Complexity --> Complexity of a particular function point or related modules(the description of assigning complexity is listed below in this section)*
+Complexity of function points in a system determines, the greater number of functionalities a system has, the more complex the system is. 
+There are three types of it: 
+Complex, Medium and Simple
+•	Complex functionality is one that consist of multiple interacting components, having weightage 5.
+•	Medium functionality is with limited number of components, having weightage 3.
+•	Simple is the one, which is composed of small number of components, having weightage 1
+
+Time --> Estimated max time assigned to each Function Point of particular testing task by QA team lead or sr. SQA analyst
+Cost --> Calculated cost for each function point using complexity and time with function point estimation technique to calculate cost using the formula listed below:
+cost = Cost = (Complexity * Time) * average amount set per task or per Function Point
+note: In this case it is set as 7$ per man hour for each FP.
+Prioirty --> Is the assigned testcases priority against each Function Point by the testing team, QA Team lead or SQA analyst.
+
+______________________________________________________For Detail understanding_________________________________________________________________________
+
+[1] https://requirements.com/Content/What-is/what-is-requirements-prioritization
