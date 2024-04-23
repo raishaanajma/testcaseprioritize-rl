@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
-#default cost value for missing test cases
+#default cost for missing test cases
 DEFAULT_COST_VALUE = 0
 
 class PolicyNetwork(nn.Module):
@@ -20,11 +20,11 @@ class PolicyNetwork(nn.Module):
         return F.softmax(x, dim=-1)
 
 class TestCasePrioritizationEnvironment:
-    def __init__(self, test_cases, costs, value_priorities, complexity):
+    def __init__(self, test_cases, costs, value_priorities, complexities):
         self.test_cases = test_cases
         self.costs = costs
         self.value_priorities = value_priorities
-        self.complexity = complexity
+        self.complexities = complexities
         self.state = np.zeros(len(test_cases))  #initial state
         self.total_cost = 0
         self.selected_test_cases_sequences = []  #store selected test cases for each episode
@@ -36,15 +36,15 @@ class TestCasePrioritizationEnvironment:
         #execute selected test cases
         selected_test_case = self.test_cases[action_scalar]
         
-        #get the cost for the selected test case, or use default cost if not found
+        #get the cost for the selected test case
         executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE)
         self.total_cost += executed_test_case_cost
         
         #calculate reward based on value priority and complexity
-        reward = self.value_priorities[selected_test_case] * self.complexity[selected_test_case]
+        reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case]
         
         #update state
-        self.state = np.zeros(len(self.test_cases))  # Reset state
+        self.state = np.zeros(len(self.test_cases))  #reset state
         self.state[action_scalar] = 1
         
         #store selected test case for this step
@@ -63,9 +63,9 @@ df = pd.read_excel('Test_Project_MIS.xlsx')
 test_cases = df['Test Cases'].tolist()
 costs = df.set_index('Test Cases')['Cost'].to_dict()
 value_priorities = df.set_index('Test Cases')['Weights'].to_dict()
-complexity = df.set_index('Test Cases')['Complexity'].to_dict()
+complexities = df.set_index('Test Cases')['Complexity'].to_dict()
 
-env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexity)
+env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexities)
 
 #deep RL training loop
 input_size = len(test_cases)
