@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 
-def seedcode(seed=42):
+def seedcode(seed = 42): #starting number
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
