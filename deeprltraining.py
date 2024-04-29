@@ -66,11 +66,17 @@ costs = df.set_index('Test Cases')['Cost'].to_dict()
 value_priorities = df.set_index('Test Cases')['Weights'].to_dict()
 complexities = df.set_index('Test Cases')['Complexity'].to_dict()
 
+for key, value in value_priorities.items():
+    if value == 1:
+        value_priorities[key] = 3
+    elif value == 3:
+        value_priorities[key] = 1
+
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexities)
 
 #deep RL training loop
 input_size = len(test_cases)
-hidden_size = 128
+hidden_size = 128 #the number of neurons or units in the hidden layer of the network
 output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr = 0.001)
