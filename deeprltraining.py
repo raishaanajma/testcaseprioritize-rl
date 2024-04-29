@@ -9,7 +9,7 @@ import torch.nn.functional as F
 #default cost for missing test cases
 DEFAULT_COST_VALUE = 0
 
-class PolicyNetwork(nn.Module):
+class PolicyNetwork(nn.Module): #neural network block
     def __init__(self, input_size, hidden_size, output_size):
         super(PolicyNetwork, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
@@ -20,12 +20,12 @@ class PolicyNetwork(nn.Module):
         x = self.fc2(x)
         return F.softmax(x, dim=-1)
 
-class TestCasePrioritizationEnvironment:
+class TestCasePrioritizationEnvironment: #environment where agent interacts
     def __init__(self, test_cases, costs, value_priorities, complexities):
-        self.test_cases = test_cases
-        self.costs = costs
-        self.value_priorities = value_priorities
-        self.complexities = complexities
+        self.test_cases = test_cases #test case ID
+        self.costs = costs #attribute
+        self.value_priorities = value_priorities #attribute
+        self.complexities = complexities #attribute
         self.state = np.zeros(len(test_cases))  #initial state
         self.total_cost = 0
         self.selected_test_cases_sequences = []  #store selected test cases for each episode
@@ -73,7 +73,7 @@ input_size = len(test_cases)
 hidden_size = 128
 output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
-optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
+optimizer = optim.Adam(policy_net.parameters(), lr = 0.001)
 gamma = 0.99  #discount factor
 num_episodes = 100
 max_steps_per_episode = len(test_cases)
