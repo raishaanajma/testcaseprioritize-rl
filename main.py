@@ -116,5 +116,5 @@ for episode in range(num_episodes):
 #print sequence of test cases and total reward for each episode
 print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")
 for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_cases_sequences, env.total_rewards), start=1):
-    print_test_case = selected_test_cases[:10] #print only 10 test cases for each episode
+    print_test_case = selected_test_cases[:5] #print only 10 test cases for each episode
     print(f"Episode {i}: {print_test_case} \n> REWARD: {total_reward}\n")
