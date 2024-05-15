@@ -125,4 +125,4 @@ for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_ca
     print(f"Episode {i}: {print_test_case} \n> REWARD: {total_reward}\n")
 
 #print the maximum reward and its sequence at the bottom
-print(f"MAX Reward: {max_reward}\nEpisode max reward: {max_reward_sequence}")
+print(f"MAX Reward: {max_reward}\nEpisode max reward: {max_reward_sequence[:5]}, {max_reward_index}")
