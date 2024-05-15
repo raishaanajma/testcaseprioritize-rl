@@ -113,8 +113,16 @@ for episode in range(num_episodes):
     policy_loss.backward()
     optimizer.step()
 
+#find maximum reward
+max_reward = max(env.total_rewards)
+max_reward_index = env.total_rewards.index(max_reward)
+max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
+
 #print sequence of test cases and total reward for each episode
 print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")
 for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_cases_sequences, env.total_rewards), start=1):
-    print_test_case = selected_test_cases[:5] #print only 10 test cases for each episode
+    print_test_case = selected_test_cases[:5] #print only 5 test cases for each episode
     print(f"Episode {i}: {print_test_case} \n> REWARD: {total_reward}\n")
+
+#print the maximum reward and its sequence at the bottom
+print(f"MAX Reward: {max_reward}\nEpisode max reward: {max_reward_sequence}")
