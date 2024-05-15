@@ -114,4 +114,4 @@ for episode in range(num_episodes):
 print("Final Result - Sequence of Selected Test Cases:")
 for i, selected_test_cases in enumerate(env.selected_test_cases_sequences, start = 1):
     print_test_case = selected_test_cases[:10] #print only 10 test cases for each episode
-    print("Episode", i, ":", selected_test_cases, "\n")
+    print("Episode", i, ":", print_test_case, "\n")
