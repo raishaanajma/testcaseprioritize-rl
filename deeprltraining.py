@@ -82,7 +82,7 @@ policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr = 0.001)
 gamma = 0.99  #discount factor
 num_episodes = 100
-max_steps_per_episode = len(test_cases)
+max_steps_per_episode = 10
 
 for episode in range(num_episodes):
     state = env.reset()
@@ -113,4 +113,4 @@ for episode in range(num_episodes):
 #print sequence of test cases for each episode
 print("Final Result - Sequence of Selected Test Cases:")
 for i, selected_test_cases in enumerate(env.selected_test_cases_sequences, start = 1):
-    print("Episode", i, ":", selected_test_cases, "\n\n")
+    print("Episode", i, ":", selected_test_cases, "\n")
