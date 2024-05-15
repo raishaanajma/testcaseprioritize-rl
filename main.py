@@ -26,10 +26,10 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         self.costs = costs #attribute
         self.value_priorities = value_priorities #attribute
         self.complexities = complexities #attribute
-        self.state = np.zeros(len(test_cases))  #initial state
+        self.state = np.zeros(len(test_cases)) #initial state
         self.total_cost = 0
-        self.selected_test_cases_sequences = []  #store selected test cases for each episode
-        self.total_rewards = []  #store total rewards for each episode
+        self.selected_test_cases_sequences = [] #store selected test cases for each episode
+        self.total_rewards = [] #store total rewards for each episode
 
     def step(self, action):
         #convert action tensor to scalar
@@ -43,10 +43,10 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         self.total_cost += executed_test_case_cost
         
         #calculate reward based on cost, value priority, and complexity
-        reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case] - executed_test_case_cost
+        reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case] / (executed_test_case_cost)
         
         #update state
-        self.state = np.zeros(len(self.test_cases))  #reset state
+        self.state = np.zeros(len(self.test_cases)) #reset state
         self.state[action_scalar] = 1
         
         #store selected test case for this step
@@ -55,10 +55,10 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         return self.state, reward, self.total_cost
 
     def reset(self):
-        self.state = np.zeros(len(self.test_cases))  #reset state
+        self.state = np.zeros(len(self.test_cases)) #reset state
         self.total_cost = 0
-        self.selected_test_cases_sequences.append([])  #start new episode
-        self.total_rewards.append(0)  #initialize total reward for new episode
+        self.selected_test_cases_sequences.append([]) #start new episode
+        self.total_rewards.append(0) #initialize total reward for new episode
         return self.state
 
 #implement
@@ -82,7 +82,7 @@ hidden_size = 128 #the number of neurons or units in the hidden layer of the net
 output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr = 0.001)
-gamma = 0.99  #discount factor
+gamma = 0.99 #discount factor
 num_episodes = 100
 max_steps_per_episode = len(test_cases)
 
@@ -94,12 +94,12 @@ for episode in range(num_episodes):
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
         action_probs = policy_net(state_tensor)
         action_dist = torch.distributions.Categorical(action_probs)
-        action = action_dist.sample().item()  #convert tensor to scalar
-        action_tensor = torch.tensor([action])  #convert scalar to tensor
-        episode_log_probs.append(action_dist.log_prob(action_tensor))  #pass action tensor
+        action = action_dist.sample().item() #convert tensor to scalar
+        action_tensor = torch.tensor([action]) #convert scalar to tensor
+        episode_log_probs.append(action_dist.log_prob(action_tensor)) #pass action tensor
         next_state, reward, total_cost = env.step(action_tensor)
         episode_rewards.append(reward)
-        env.total_rewards[-1] += reward  #accumulate total reward for the episode
+        env.total_rewards[-1] += reward #accumulate total reward for the episode
         state = next_state
     returns = []
     R = 0
@@ -117,4 +117,4 @@ for episode in range(num_episodes):
 print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")
 for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_cases_sequences, env.total_rewards), start=1):
     print_test_case = selected_test_cases[:10] #print only 10 test cases for each episode
-    print(f"Episode {i} : {print_test_case} \n> REWARD: {total_reward}\n")
+    print(f"Episode {i}: {print_test_case} \n> REWARD: {total_reward}\n")
