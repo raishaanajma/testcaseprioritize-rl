@@ -42,8 +42,8 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE)
         self.total_cost += executed_test_case_cost
         
-        #calculate reward based on value priority and complexity
-        reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case]
+        #calculate reward based on cost, value priority, and complexity
+        reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case] - executed_test_case_cost
         
         #update state
         self.state = np.zeros(len(self.test_cases))  #reset state
