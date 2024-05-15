@@ -29,6 +29,7 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         self.state = np.zeros(len(test_cases))  #initial state
         self.total_cost = 0
         self.selected_test_cases_sequences = []  #store selected test cases for each episode
+        self.total_rewards = []  #store total rewards for each episode
 
     def step(self, action):
         #convert action tensor to scalar
@@ -57,6 +58,7 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         self.state = np.zeros(len(self.test_cases))  #reset state
         self.total_cost = 0
         self.selected_test_cases_sequences.append([])  #start new episode
+        self.total_rewards.append(0)  #initialize total reward for new episode
         return self.state
 
 #implement
@@ -74,7 +76,7 @@ for key, value in value_priorities.items():
 
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexities)
 
-#deep RL training loop
+#RL training loop
 input_size = len(test_cases)
 hidden_size = 128 #the number of neurons or units in the hidden layer of the network
 output_size = len(test_cases)
@@ -97,6 +99,7 @@ for episode in range(num_episodes):
         episode_log_probs.append(action_dist.log_prob(action_tensor))  #pass action tensor
         next_state, reward, total_cost = env.step(action_tensor)
         episode_rewards.append(reward)
+        env.total_rewards[-1] += reward  #accumulate total reward for the episode
         state = next_state
     returns = []
     R = 0
@@ -110,8 +113,8 @@ for episode in range(num_episodes):
     policy_loss.backward()
     optimizer.step()
 
-#print sequence of test cases for each episode
-print("Final Result - Sequence of Selected Test Cases:")
-for i, selected_test_cases in enumerate(env.selected_test_cases_sequences, start = 1):
+#print sequence of test cases and total reward for each episode
+print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")
+for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_cases_sequences, env.total_rewards), start=1):
     print_test_case = selected_test_cases[:10] #print only 10 test cases for each episode
-    print("Episode", i, ":", print_test_case, "\n")
+    print(f"Episode {i} : {print_test_case} \n> REWARD: {total_reward}\n")
