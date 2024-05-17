@@ -12,7 +12,7 @@ def calculate_apfd(test_cases_sequence, total_faults, faults_matrix):
     m = total_faults
     fault_positions = [0] * m
 
-    unique_faults = set(fault for faults in faults_matrix.values() for fault in faults) #create a mapping from fault IDs to indices
+    unique_faults = set(fault for faults in faults_matrix.values() for fault in faults) #create a mapping from fault IDs
     fault_id_to_index = {fault_id: index for index, fault_id in enumerate(unique_faults)}
 
     for i, test_case in enumerate(test_cases_sequence):
@@ -34,5 +34,6 @@ max_reward_sequence = data['max_reward_sequence']
 total_faults = data['total_faults']
 faults_matrix = data['faults_matrix']
 
-apfd_value = calculate_apfd(max_reward_sequence, total_faults, faults_matrix) #calculate the APFD value
-print(f"APFD Value: {apfd_value} \n")
+apfd_value = calculate_apfd(max_reward_sequence, total_faults, faults_matrix) #calculate APFD value
+
+print(f"APFD Value: {apfd_value}")
