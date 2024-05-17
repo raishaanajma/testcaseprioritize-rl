@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import json
 
 #default cost for missing test cases
 DEFAULT_COST_VALUE = 0
@@ -74,6 +75,17 @@ for key, value in value_priorities.items():
     elif value == 3:
         value_priorities[key] = 1
 
+#load FP (Fault Point)
+faults_matrix = {}
+for _, row in df.iterrows():
+    test_case = row['Test Cases']
+    faults = row['FP'].split(',')
+    fault_ids = [fault.strip().split('-')[1] for fault in faults]
+    faults_matrix[test_case] = fault_ids
+
+unique_faults = set(fault for faults in faults_matrix.values() for fault in faults)
+total_faults = len(unique_faults)
+
 env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexities)
 
 #RL training loop
@@ -117,6 +129,16 @@ for episode in range(num_episodes):
 max_reward = max(env.total_rewards)
 max_reward_index = env.total_rewards.index(max_reward)
 max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
+
+#save result to JSON
+data_to_save = {
+    "max_reward_sequence": max_reward_sequence,
+    "total_faults": total_faults,
+    "faults_matrix": faults_matrix
+}
+
+with open('results.json', 'w') as f:
+    json.dump(data_to_save, f, indent = 4)
 
 #print sequence of test cases and total reward for each episode
 print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")
