@@ -1,7 +1,7 @@
 import json
 
 def calculate_aprc(covered_requirements, total_requirements):
-    
+
     """
     covered_requirements (list of sets): List of sets, each containing covered requirements for an episode.
     total_requirements (int): Total number of unique requirements.
@@ -23,4 +23,4 @@ total_requirements = data['total_requirements']
 #calculate the APRC value
 aprc_value = calculate_aprc(covered_requirements, total_requirements)
 
-print(f"Average Percentage of Requirement Coverage (APRC): {aprc_value}")
+print(f"Average Percentage of Requirement Coverage (APRC): {aprc_value} \n")
