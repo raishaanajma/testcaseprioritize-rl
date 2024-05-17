@@ -2,8 +2,6 @@
 
 def calculate_apfd(test_cases_sequence, total_faults, faults_matrix):
     """
-    Calculate APFD for a given test case sequence.
-
     Parameters:
     test_cases_sequence (list): The sequence of selected test cases.
     total_faults (int): The total number of faults in the system.
