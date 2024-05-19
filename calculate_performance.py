@@ -22,4 +22,4 @@ total_requirements = data['total_requirements']
 #calculate the APRC value
 aprc_value = calculate_aprc(covered_requirements, total_requirements)
 
-print(f"Average Percentage of Requirement Coverage (APRC): {aprc_value:.6f}")
+print(f"Average Percentage of Requirement Coverage (APRC): {aprc_value:.6f} ({aprc_value * 100:.2f}%)\n")
