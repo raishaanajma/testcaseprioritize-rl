@@ -86,7 +86,7 @@ env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, com
 
 #RL training loop
 input_size = len(test_cases)
-hidden_size = 128 #number of neurons or units in the hidden layer of the network
+hidden_size = 1024 #number of neurons or units in the hidden layer of the network
 output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
