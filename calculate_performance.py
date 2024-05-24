@@ -13,7 +13,7 @@ def calculate_aprc(covered_requirements, total_requirements):
     return sum(aprc_list) / len(aprc_list) if aprc_list else 0
 
 #load data from JSON
-with open('results.json', 'r') as f:
+with open('results_testing.json', 'r') as f:
     data = json.load(f)
 
 covered_requirements = [set(reqs) for reqs in data['covered_requirements']]
