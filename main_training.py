@@ -5,7 +5,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-import json
 
 #default cost for missing test cases
 DEFAULT_COST_VALUE = 0
@@ -35,27 +34,17 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         self.covered_requirements = [] #store covered requirements for each episode
 
     def step(self, action):
-        #convert action tensor to scalar
-        action_scalar = action.item()
-
-        #execute selected test cases
-        selected_test_case = self.test_cases[action_scalar]
-
-        #get the cost for the selected test case
-        executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE)
+        action_scalar = action.item() #convert action tensor to scalar
+        selected_test_case = self.test_cases[action_scalar] #execute selected test cases
+        executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE) #get the cost for the selected test case
         self.total_cost += executed_test_case_cost
-
         #calculate reward based on cost, value priority, and complexity
         reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case] / (executed_test_case_cost)
-
-        # Update state
+        #update state
         self.state = np.zeros(len(self.test_cases)) #reset state
         self.state[action_scalar] = 1
-
-        #store selected test case for this step
-        self.selected_test_cases_sequences[-1].append(selected_test_case)
+        self.selected_test_cases_sequences[-1].append(selected_test_case) #store selected test case for this step
         self.covered_requirements[-1].update({self.requirements[selected_test_case]})
-
         return self.state, reward, self.total_cost
 
     def reset(self):
@@ -93,8 +82,8 @@ output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 
 optimizer = optim.Adam(policy_net.parameters(), lr=0.001)
-gamma = 0.99 #discount factor
-num_episodes = 100
+gamma = 0.95 #discount factor
+num_episodes = 10
 max_steps_per_episode = len(test_cases)
 
 for episode in range(num_episodes):
@@ -129,18 +118,7 @@ max_reward = max(env.total_rewards)
 max_reward_index = env.total_rewards.index(max_reward)
 max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
 
-#save trained model
-torch.save(policy_net.state_dict(), 'policy_net.pth')
-
-#save result to JSON
-data_to_save = {
-    "max_reward_sequence": max_reward_sequence,
-    "covered_requirements": [list(reqs) for reqs in env.covered_requirements],
-    "total_requirements": total_requirements
-}
-
-with open('results_training.json', 'w') as f:
-    json.dump(data_to_save, f, indent=4)
+torch.save(policy_net.state_dict(), 'policy_net.pth') #save trained model
 
 #print sequence of test cases and total reward for each episode
 print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")

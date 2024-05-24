@@ -35,27 +35,17 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         self.covered_requirements = [] #store covered requirements for each episode
 
     def step(self, action):
-        #convert action tensor to scalar
-        action_scalar = action.item()
-
-        #execute selected test cases
-        selected_test_case = self.test_cases[action_scalar]
-
-        #get the cost for the selected test case
-        executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE)
+        action_scalar = action.item() #convert action tensor to scalar
+        selected_test_case = self.test_cases[action_scalar] #execute selected test cases
+        executed_test_case_cost = self.costs.get(selected_test_case, DEFAULT_COST_VALUE) #get the cost for the selected test case
         self.total_cost += executed_test_case_cost
-
         #calculate reward based on cost, value priority, and complexity
         reward = (4 - self.value_priorities[selected_test_case]) * self.complexities[selected_test_case] / (executed_test_case_cost)
-
         #update state
         self.state = np.zeros(len(self.test_cases)) #reset state
         self.state[action_scalar] = 1
-
-        #store selected test case for this step
-        self.selected_test_cases_sequences[-1].append(selected_test_case)
+        self.selected_test_cases_sequences[-1].append(selected_test_case) #store selected test case for this step
         self.covered_requirements[-1].update({self.requirements[selected_test_case]})
-
         return self.state, reward, self.total_cost
 
     def reset(self):
@@ -82,9 +72,7 @@ for key, value in value_priorities.items():
         value_priorities[key] = 1
 
 total_requirements = len(set(requirements.values()))
-
-#prepare the environment
-env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexities, requirements)
+env = TestCasePrioritizationEnvironment(test_cases, costs, value_priorities, complexities, requirements) #prepare the environment
 
 #define the neural network
 input_size = len(test_cases)
@@ -97,7 +85,7 @@ policy_net.load_state_dict(torch.load('policy_net.pth'))
 policy_net.eval()  #set the model to evaluation mode
 
 #evaluation loop
-num_episodes = 100  #number of episodes for testing
+num_episodes = 10  #number of episodes for testing
 max_steps_per_episode = len(test_cases)
 
 for episode in range(num_episodes):
