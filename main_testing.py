@@ -88,7 +88,7 @@ policy_net.load_state_dict(torch.load('policy_net.pth'))
 policy_net.eval()  #set the model to evaluation mode
 
 #evaluation loop
-num_episodes = 10  #number of episodes for testing
+num_episodes = 10 #number of episodes for testing
 max_steps_per_episode = len(test_cases)
 
 for episode in range(num_episodes):
