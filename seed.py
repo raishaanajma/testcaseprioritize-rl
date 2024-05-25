@@ -4,7 +4,7 @@ import numpy as np
 #this  file is needed to make result reproducible
 #it works by giving starting number (seed) so it has consistent result
 
-def seedcode(seed = 42): #starting number
+def seedcode(seed = 63): #starting number
     torch.manual_seed(seed) #to make torch using seed
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
