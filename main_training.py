@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from sklearn.model_selection import train_test_split
 
 #default cost for missing test cases
 DEFAULT_COST_VALUE = 0
@@ -56,12 +57,14 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
         return self.state
 
 #load the dataset
-df = pd.read_excel('Test_Project_MIS_training.xlsx')
-test_cases = df['Test Cases'].tolist()
-costs = df.set_index('Test Cases')['Cost'].to_dict()
-value_priorities = df.set_index('Test Cases')['Weights'].to_dict()
-complexities = df.set_index('Test Cases')['Complexity'].to_dict()
-requirements = df.set_index('Test Cases')['B_Req'].to_dict()
+df = pd.read_excel('Test_Project_MIS.xlsx')
+train_df, test_df = train_test_split(df, test_size=0.5, random_state=42)
+
+test_cases = train_df['Test Cases'].tolist()
+costs = train_df.set_index('Test Cases')['Cost'].to_dict()
+value_priorities = train_df.set_index('Test Cases')['Weights'].to_dict()
+complexities = train_df.set_index('Test Cases')['Complexity'].to_dict()
+requirements = train_df.set_index('Test Cases')['B_Req'].to_dict()
 
 #modify value priorities
 for key, value in value_priorities.items():
