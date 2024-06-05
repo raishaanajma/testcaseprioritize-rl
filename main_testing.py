@@ -119,8 +119,9 @@ max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
 #save testing result to JSON
 data_to_save = {
     "max_reward_sequence": max_reward_sequence,
-    "test_case_costs" : costs,
+    "test_case_costs": costs,
     "covered_requirements": [list(reqs) for reqs in env.covered_requirements],
+    "priorities": value_priorities,
     "total_requirements": total_requirements
 }
 
