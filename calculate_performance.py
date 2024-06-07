@@ -31,12 +31,9 @@ test_case_costs = data['test_case_costs']
 #calculate APRC value
 aprc_value = calculate_aprc(covered_requirements, total_requirements)
 
-#calculate total cost
-total_cost = calculate_total_cost(test_case_costs)
-
 #calculate cost per TC
-average_cost_per_test_case = calculate_average_cost_per_test_case(total_cost, total_requirements)
+average_cost_per_test_case = calculate_average_cost_per_test_case(test_case_costs, total_requirements)
 
 print(f"\nAverage Percentage of Requirement Coverage (APRC): {aprc_value:.6f} ({aprc_value * 100:.2f}%)")
-print(f"Total Cost: ${total_cost}")
+print(f"Total Cost: ${test_case_costs}")
 print(f"Total Cost per Test Case: $ {average_cost_per_test_case:.2f}")

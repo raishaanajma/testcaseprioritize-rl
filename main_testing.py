@@ -116,10 +116,13 @@ max_reward = max(env.total_rewards)
 max_reward_index = env.total_rewards.index(max_reward)
 max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
 
+#find the cost of maximum reward sequence
+max_reward_cost = sum(costs[test_case] for test_case in max_reward_sequence)
+
 #save testing result to JSON
 data_to_save = {
     "max_reward_sequence": max_reward_sequence,
-    "test_case_costs": costs,
+    "test_case_costs": max_reward_cost,
     "covered_requirements": [list(reqs) for reqs in env.covered_requirements],
     "priorities": value_priorities,
     "total_requirements": total_requirements
