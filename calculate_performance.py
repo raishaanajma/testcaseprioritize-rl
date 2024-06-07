@@ -14,7 +14,7 @@ def calculate_aprc(covered_requirements, total_requirements):
 with open('results_testing.json', 'r') as f:
     data = json.load(f)
 
-covered_requirements = data['max_reward_sequence']
+covered_requirements = data['covered_requirements']
 total_requirements = data['total_requirements']
 
 #calculate APRC value
