@@ -119,13 +119,45 @@ max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
 #find the cost of maximum reward sequence
 max_reward_cost = sum(costs[test_case] for test_case in max_reward_sequence)
 
+#calculate requirement coverage
+requirement_coverage = [len(reqs) / total_requirements for reqs in env.covered_requirements]
+
+#calculate APRC value
+def calculate_aprc(covered_requirements, total_requirements):
+    aprc_list = []
+    for reqs in covered_requirements:
+        aprc_list.append(len(reqs) / total_requirements)
+    aprc_value = sum(aprc_list) / len(aprc_list) if aprc_list else 0
+    aprc_value += 1 / (2 * total_requirements)  #adding the smoothing term
+    return aprc_value
+
+aprc_value = calculate_aprc(env.covered_requirements, total_requirements)
+
+#calculate cost based on APRC value of the test dataset
+def calculate_total_cost(test_case_costs):
+    return sum(test_case_costs.values())
+
+def calculate_average_cost_per_test_case(total_cost, total_requirements):
+    return total_cost / total_requirements
+
+def calculate_cost_for_percentage(dataset, percentage):
+    dataset_to_consider = int(len(dataset) * percentage)
+    return dataset['Cost'].head(dataset_to_consider).sum()
+
+percentage_covered = aprc_value
+selected_test_cases_cost = calculate_cost_for_percentage(test_df, percentage_covered)
+average_cost_per_requirement_aprc = calculate_average_cost_per_test_case(selected_test_cases_cost, total_requirements * percentage_covered)
+
 #save testing result to JSON
 data_to_save = {
     "max_reward_sequence": max_reward_sequence,
     "test_case_costs": max_reward_cost,
     "covered_requirements": [list(reqs) for reqs in env.covered_requirements],
     "priorities": value_priorities,
-    "total_requirements": total_requirements
+    "total_requirements": total_requirements,
+    "aprc_value": aprc_value,
+    "selected_test_cases_cost": selected_test_cases_cost,
+    "average_cost_per_requirement_aprc": average_cost_per_requirement_aprc
 }
 
 with open('results_testing.json', 'w') as f:
@@ -139,3 +171,8 @@ for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_ca
 
 #print the maximum reward and its sequence
 print(f"[TESTING] MAX Reward: {max_reward}\nEpisode {max_reward_index + 1}: {max_reward_sequence[:5]}")
+
+# Print additional performance metrics
+print(f"\nAverage Percentage of Requirement Coverage (APRC): {aprc_value:.6f} ({aprc_value * 100:.2f}%)")
+print(f"Total Cost Based on APRC Value ({percentage_covered * 100:.2f}% of Test Dataset): ${selected_test_cases_cost}")
+print(f"Average Cost per Requirement Based on APRC: ${average_cost_per_requirement_aprc:.2f}\n")
