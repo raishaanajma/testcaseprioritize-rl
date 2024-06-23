@@ -155,9 +155,7 @@ data_to_save = {
     "covered_requirements": [list(reqs) for reqs in env.covered_requirements],
     "priorities": value_priorities,
     "total_requirements": total_requirements,
-    "aprc_value": aprc_value,
     "selected_test_cases_cost": selected_test_cases_cost,
-    "average_cost_per_requirement_aprc": average_cost_per_requirement_aprc
 }
 
 with open('results_testing.json', 'w') as f:
@@ -171,8 +169,3 @@ for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_ca
 
 #print the maximum reward and its sequence
 print(f"[TESTING] MAX Reward: {max_reward}\nEpisode {max_reward_index + 1}: {max_reward_sequence[:5]}")
-
-# Print additional performance metrics
-print(f"\nAverage Percentage of Requirement Coverage (APRC): {aprc_value:.6f} ({aprc_value * 100:.2f}%)")
-print(f"Total Cost Based on APRC Value ({percentage_covered * 100:.2f}% of Test Dataset): ${selected_test_cases_cost}")
-print(f"Average Cost per Requirement Based on APRC: ${average_cost_per_requirement_aprc:.2f}\n")

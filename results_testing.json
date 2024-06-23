@@ -5489,7 +5489,5 @@
         "TC_737": 1
     },
     "total_requirements": 657,
-    "aprc_value": 0.6321156773211568,
-    "selected_test_cases_cost": 27877.5,
-    "average_cost_per_requirement_aprc": 67.12617385022875
+    "selected_test_cases_cost": 27877.5
 }
