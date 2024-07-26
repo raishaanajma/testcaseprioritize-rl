@@ -7,7 +7,7 @@ def calculate_aprc(covered_requirements, total_requirements):
     for reqs in covered_requirements:
         aprc_list.append(len(reqs) / total_requirements)
     aprc_value = sum(aprc_list) / len(aprc_list) if aprc_list else 0
-    aprc_value += 1 / (2 * total_requirements)  #adding the smoothing term
+    aprc_value += 1 / (2 * total_requirements)  #adding the smoothing term 1/2n
     return aprc_value
 
 def calculate_total_cost(test_case_costs):

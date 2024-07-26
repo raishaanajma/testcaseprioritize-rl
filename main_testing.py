@@ -1,4 +1,3 @@
-import seed
 import numpy as np
 import pandas as pd
 import torch
@@ -83,7 +82,7 @@ hidden_size = 1024 #number of neurons or units
 output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 
-#load the trained model weights
+#load the trained model
 policy_net.load_state_dict(torch.load('policy_net.pth'))
 policy_net.eval()  #set the model to evaluation mode
 
