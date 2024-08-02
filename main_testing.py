@@ -58,7 +58,7 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
 
 #load the dataset
 df = pd.read_excel('Test_Project_MIS.xlsx')
-train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+train_df, test_df = train_test_split(df, test_size=0.5, random_state=42)
 
 test_cases = test_df['Test Cases'].tolist()
 costs = test_df.set_index('Test Cases')['Cost'].to_dict()
