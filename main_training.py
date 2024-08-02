@@ -57,7 +57,7 @@ class TestCasePrioritizationEnvironment: #environment where agent interacts
 
 #load the dataset
 df = pd.read_excel('Test_Project_MIS.xlsx')
-train_df, test_df = train_test_split(df, test_size=0.2, random_state=21)
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
 
 test_cases = train_df['Test Cases'].tolist()
 costs = train_df.set_index('Test Cases')['Cost'].to_dict()
@@ -120,7 +120,7 @@ max_reward = max(env.total_rewards)
 max_reward_index = env.total_rewards.index(max_reward)
 max_reward_sequence = env.selected_test_cases_sequences[max_reward_index]
 
-torch.save(policy_net.state_dict(), 'policy_net.pth') #save trained model
+torch.save(policy_net, 'policy_net.pth') #save trained model
 
 #print sequence of test cases and total reward for each episode
 print("Final Result - Sequence of Selected Test Cases and Total Reward for Each Episode:")

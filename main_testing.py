@@ -83,7 +83,7 @@ output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 
 #load the trained model
-policy_net.load_state_dict(torch.load('policy_net.pth'))
+policy_net = torch.load('policy_net.pth')
 policy_net.eval()  #set the model to evaluation mode
 
 #evaluation loop
