@@ -83,7 +83,7 @@ output_size = len(test_cases)
 policy_net = PolicyNetwork(input_size, hidden_size, output_size)
 
 #load the trained model
-policy_net = torch.load('policy_net.pth')
+policy_net = torch.load('policy_net.pth', weights_only=False)
 policy_net.eval()  #set the model to evaluation mode
 
 #evaluation loop
@@ -167,4 +167,4 @@ for i, (selected_test_cases, total_reward) in enumerate(zip(env.selected_test_ca
     print(f"Episode {i}: {print_test_case} \n> REWARD: {total_reward}\n")
 
 #print the maximum reward and its sequence
-print(f"[TESTING] MAX Reward: {max_reward}\nEpisode {max_reward_index + 1}: {max_reward_sequence[:5]}")
+print(f"[TESTING] MAX Reward: {max_reward}\nEpisode {max_reward_index + 1}: {max_reward_sequence[:10]}")
